@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class PlaneController extends Controller
 {
@@ -43,14 +44,22 @@ class PlaneController extends Controller
      */
     public function store(Request $request)
     {
+        // 'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         $validated = $request->validate([
             'name' => 'required|unique:planes|max:255',
             'plane_type_id' => 'required',
+            'image' => 'required|image|mimes:jpg,png,jpeg|max:8048',
         ]);
+
+//        $image_name = $request->file('image')->getClientOriginalName();
+//        $image_path = $request->file('image')->store('public/images');
+        $image_path = $request->file('image')->store('public');
+        $image_path_no_public = substr($image_path, 7);
 
         Plane::create([
             'name' => $validated['name'],
             'plane_type_id' => (int)$validated['plane_type_id'],
+            'path' => $image_path_no_public,
         ]);
 
         $planes = Plane::all();
@@ -98,10 +107,22 @@ class PlaneController extends Controller
             'plane_type_id' => 'required',
         ]);
 
-        // could be improved
         $plane = Plane::findOrFail($id);
         $plane->name = $validated['name'];
         $plane->plane_type_id = $validated['plane_type_id'];
+
+        if ($request->file('image')) {
+             $request->validate([
+                'image' => 'required|image|mimes:jpg,png,jpeg|max:8048',
+            ]);
+
+            Storage::disk('public')->delete($plane->path);
+
+            $image_path = $request->file('image')->store('public');
+            $image_path_no_public = substr($image_path, 7);
+            $plane->path = $image_path_no_public;
+        }
+
         $plane->save();
 
         $planes = Plane::all();
@@ -116,7 +137,10 @@ class PlaneController extends Controller
      */
     public function destroy(int $id)
     {
-        Plane::destroy($id);
+        $plane = Plane::findOrFail($id);
+        Storage::disk('public')->delete($plane->path);
+        $plane->delete();
+
         $planes = Plane::all();
         return view('planes.index', compact('planes'));
     }

@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <form action="{{ route('planes.update', $plane->id) }}" method="post">
+    <form action="{{ route('planes.update', $plane->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('put')
         <div class="form-group">
@@ -16,6 +16,16 @@
             </label>
             @error('name')
                 <p class="error">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="name">
+                Снимка
+                <input type="file" name="image" placeholder="Избери снимка..." id="image">
+            </label>
+            @error('image')
+            <p class="error">{{ $message }}</p>
             @enderror
         </div>
 

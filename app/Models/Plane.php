@@ -13,6 +13,7 @@ class Plane extends Model
 
     protected $fillable = [
         'name',
+        'path',
         'plane_type_id'
     ];
 

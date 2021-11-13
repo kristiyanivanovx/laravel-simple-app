@@ -8,6 +8,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Име</th>
+                <th scope="col">Снимка</th>
                 <th scope="col">Тип</th>
                 <th scope="col">Създаден на</th>
                 <th scope="col">Обновен на</th>
@@ -22,6 +23,9 @@
                         <a href="{{ route('planes.show', $plane->id) }}">
                             {{ $plane->name }}
                         </a>
+                    </td>
+                    <td>
+                        <img class="image" src="{{ asset('/storage/' . ($plane->path ?? ''))  }}" />
                     </td>
                     <td>{{ $plane->type->name }}</td>
                     <td>{{ isset($plane->created_at) ? $plane->created_at->format('d.m.Y @ H:i') : 'Няма информация.' }}</td>

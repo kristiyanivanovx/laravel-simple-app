@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <form action="{{ route('planes.store') }}" method="post">
+    <form action="{{ route('planes.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="name">
@@ -14,6 +14,16 @@
                 >
             </label>
             @error('name')
+                <p class="error">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="name">
+                Снимка
+                <input type="file" name="image" placeholder="Избери снимка..." id="image">
+            </label>
+            @error('image')
                 <p class="error">{{ $message }}</p>
             @enderror
         </div>
