@@ -51,16 +51,14 @@ class PlaneController extends Controller
             'image' => 'required|image|mimes:jpg,png,jpeg|max:20000',
         ]);
 
-//        $image_name = $request->file('image')->getClientOriginalName();
-//        $image_path = $request->file('image')->store('public/images');
-        $image_path = $request->file('image')->store('public');
-        $image_path_no_public = substr($image_path, 7);
+        $image_name = uniqid() . '-' . $request->file('image')->getClientOriginalName();
+        $image_path = '/storage/' . $request->file('image')->storeAs('images', $image_name, 'public');
 
         // php by default limits file sizes to 2 MB maximum - https://laraveldaily.com/validate-max-file-size-in-laravel-php-and-web-server/
         Plane::create([
             'name' => $validated['name'],
             'plane_type_id' => (int)$validated['plane_type_id'],
-            'path' => $image_path_no_public,
+            'path' => $image_path,
         ]);
 
         $planes = Plane::all();
@@ -118,11 +116,15 @@ class PlaneController extends Controller
                 'image' => 'required|image|mimes:jpg,png,jpeg|max:20000',
             ]);
 
-            Storage::disk('public')->delete($plane->path);
+            $plane = Plane::findOrFail($id);
 
-            $image_path = $request->file('image')->store('public');
-            $image_path_no_public = substr($image_path, 7);
-            $plane->path = $image_path_no_public;
+            $path = str_replace("/storage/", "", $plane->path);
+            Storage::disk('public')->delete($path);
+
+            $image_name = uniqid() . '-' . $request->file('image')->getClientOriginalName();
+            $image_path = '/storage/' . $request->file('image')->storeAs('images', $image_name, 'public');
+
+            $plane->path = $image_path;
         }
 
         $plane->save();
@@ -140,7 +142,8 @@ class PlaneController extends Controller
     public function destroy(int $id)
     {
         $plane = Plane::findOrFail($id);
-        Storage::disk('public')->delete($plane->path);
+        $path = str_replace("/storage/", "", $plane->path);
+        Storage::disk('public')->delete($path);
         $plane->delete();
 
         $planes = Plane::all();

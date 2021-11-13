@@ -26,7 +26,7 @@
                         </a>
                     </td>
                     <td>
-                        <img class="image" src="{{ asset('/storage/' . ($plane->path ?? ''))  }}" />
+                        <img class="image" src="{{ asset($plane->path ?? '') }}" />
                     </td>
                     <td>{{ $plane->type->name }}</td>
                     <td>{{ isset($plane->created_at) ? $plane->created_at->format('d.m.Y @ H:i') : 'Няма информация.' }}</td>
