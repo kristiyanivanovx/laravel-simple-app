@@ -130,5 +130,8 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-    'attributes' => array('name' => 'име')
+    'attributes' => [
+        'name' => 'име',
+        'image' => 'снимка',
+    ]
 ];
