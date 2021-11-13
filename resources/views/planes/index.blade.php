@@ -25,8 +25,8 @@
                         </a>
                     </td>
                     <td>{{ $plane->type->name }}</td>
-                    <td>{{ $plane->created_at }}</td>
-                    <td>{{ $plane->updated_at }}</td>
+                    <td>{{ isset($plane->created_at) ? $plane->created_at->format('d.m.Y @ H:i') : 'Няма информация.' }}</td>
+                    <td>{{ isset($plane->updated_at) ? $plane->updated_at->format('d.m.Y @ H:i') : 'Няма информация.'}}</td>
                     <td>
                         <form>
                             <a role="button" class="outline mt-4" href="{{ route('planes.edit', $plane->id) }}">
