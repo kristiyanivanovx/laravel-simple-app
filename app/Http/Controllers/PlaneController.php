@@ -110,13 +110,15 @@ class PlaneController extends Controller
         $plane->name = $validated['name'];
         $plane->plane_type_id = $validated['plane_type_id'];
 
+//        dd($plane);
+
         if ($request->file('image')) {
             // php by default limits file sizes to 2 MB maximum - https://laraveldaily.com/validate-max-file-size-in-laravel-php-and-web-server/
             $request->validate([
                 'image' => 'required|image|mimes:jpg,png,jpeg|max:20000',
             ]);
 
-            $plane = Plane::findOrFail($id);
+//            $plane = Plane::findOrFail($id);
 
             $path = str_replace("/storage/", "", $plane->path);
             Storage::disk('public')->delete($path);
